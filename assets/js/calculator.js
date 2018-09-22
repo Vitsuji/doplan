@@ -1,11 +1,11 @@
 function staff (sum) {
-  const add = (a, b) => a + b
-  const sumWorkers = sum.reduce(add)
+  const sumWorkers = sum.reduce((a, b) => a + b)
 
-  return Math.round(sumWorkers / 0.86)
+  return Math.round(sumWorkers)
 }
 
 function staffTax (staff) {
+  staff /= 0.86
   let staffTax = (staff * 0.35) + (staff * 0.13) + (staff * 0.06)
 
   return Math.round(staffTax)
@@ -28,12 +28,18 @@ function vat (tech, materials, housing, buying, realDeal) {
   return Math.round(vat)
 }
 
-// function incomeTax (grossIncome, staff, tech, materials, ads, housing) {
-//   let incomeTax = (grossIncome - (staff - (staff * 0.34) - (staff * 0.06) - (((tech / 6) * 5) / 60) - (materials / 6 * 5) - (ads / 6 * 5) - (housing / 6 * 5))) * 0.18
+function incomeTax (grossIncome, staff, tech, materials, ads, housing) {
+  staff /= 0.86
+  let incomeTax = (grossIncome - staff - staff * 0.34 - staff * 0.06 - tech / 6 * 5 / 60 - materials / 6 * 5 - ads / 6 * 5 - housing / 6 * 5) * 0.18
+  console.log(`staff - ${staff}`)
+  return Math.round(incomeTax)
+}
 
-//   return Math.round(incomeTax)
-// }
+function moneySpent (...data) {
+  console.log(`data = ${data}`)
+  return data.reduce((a, b) => a + b)
+}
 
 module.exports = {
-  staff, staffTax, realDeal, grossIncome, vat
+  staff, staffTax, realDeal, grossIncome, vat, incomeTax, moneySpent
 }

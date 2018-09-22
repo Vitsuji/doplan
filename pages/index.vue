@@ -78,7 +78,7 @@
               class="buying"
               min=0
               type="number"
-              label="Кокупка Товаров"
+              label="Покупка Товаров"
               suffix="BYN"
               required
               @change="countAllData"
@@ -96,7 +96,8 @@
             <v-btn v-show="realDeal" color="warning" dark>Реализация выручка: {{ realDeal }}</v-btn>
             <v-btn v-show="grossIncome" color="warning" dark>Валовый доход: {{ grossIncome }}</v-btn>
             <v-btn v-show="vat" color="warning" dark>НДС к уплате: {{ vat }}</v-btn>
-            <!-- <v-btn v-show="incomeTax" color="warning" dark>Налог на прибыль: {{ incomeTax }}</v-btn> -->
+            <v-btn v-show="incomeTax" color="warning" dark>Налог на прибыль: {{ incomeTax }}</v-btn>
+            <v-btn v-show="moneySpent" color="warning" dark>Изразходовано Денег: {{moneySpent }}</v-btn>
           </div>
       </v-form>
     </v-flex>
@@ -115,8 +116,9 @@ export default {
       staffTax: '',
       realDeal: '',
       grossIncome: '',
-      vat: ''
-      // incomeTax: ''
+      vat: '',
+      incomeTax: '',
+      moneySpent: ''
     }
   },
   methods: {
@@ -131,7 +133,7 @@ export default {
       }
       console.log(sum)
 
-      this.staff = calculator.staff(sum)
+      this.staff = calculator.staff(sum) / 0.86
       this.staffTax = calculator.staffTax(this.staff)
     },
     countAllData: function (event) {
@@ -139,7 +141,7 @@ export default {
       let materials = parseInt(document.getElementsByClassName('materials')[0].querySelector('[aria-label="Канцтовары, материалы"]').value)
       let ads = parseInt((document.getElementsByClassName('ads')[0]).querySelector('[aria-label="Реклама"]').value)
       let housing = parseInt((document.getElementsByClassName('housing')[0]).querySelector('[aria-label="Аренда"').value)
-      let buying = parseInt((document.getElementsByClassName('buying')[0]).querySelector('[aria-label="Кокупка Товаров"').value)
+      let buying = parseInt((document.getElementsByClassName('buying')[0]).querySelector('[aria-label="Покупка Товаров"').value)
       let percent = parseInt((document.getElementsByClassName('percent')[0]).querySelector('[aria-label="Наценка"').value)
 
       console.log(tech)
@@ -151,7 +153,10 @@ export default {
       this.realDeal = calculator.realDeal(buying, percent)
       this.grossIncome = calculator.grossIncome(buying, this.realDeal)
       this.vat = calculator.vat(tech, materials, housing, buying, this.realDeal)
-      // this.incomeTax = calculator.incomeTax(this.grossIncome, this.staff, tech, materials, ads, housing)
+
+      this.incomeTax = calculator.incomeTax(this.grossIncome, this.staff, tech, materials, ads, housing)
+
+      this.moneySpent = calculator.moneySpent(this.staff, this.staffTax, tech, materials, ads, housing, buying, this.vat, this.incomeTax)
     },
     addWorker () {
       this.inputs.push({
